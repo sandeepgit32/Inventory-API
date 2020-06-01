@@ -35,6 +35,9 @@ exports.findAll = (req, res, next) => {
 
 // Create and Save the information of a new product into the database
 exports.create = (req, res, next) => {
+    if (Object.keys(req.body).length === 0) {
+        return apiResponse.validationError400(res,'Product content cannot be empty');
+    }
     const product = new Product({
         _id: new mongoose.Types.ObjectId(),
         product_code: req.body.product_code,
@@ -52,18 +55,32 @@ exports.create = (req, res, next) => {
         .catch(err => apiResponse.ErrorResponse500(res, err));
 };
 
-// Find a single product's information with a productId
+// Find a single product's information with a productID
 exports.findOne = (req, res) => {
-    Product.findById(req.params.productId)
+    Product.findById(req.params.productID)
         .then(product => {
             if (!product) {
-                return apiResponse.notFoundResponse404(res,`Product not found with id ${req.params.productId}`);
+                return apiResponse.notFoundResponse404(res,`Product not found with id ${req.params.productID}`);
             }
             return apiResponse.successResponse200(res, product);
         })
         .catch(err => apiResponse.ErrorResponse500(res, err))
 };
 
-// Update (patch) the information of a product identified by the productId in the request
+// Update (patch) the information of a product identified by the productID in the request
+exports.updateInfo = (req, res) => {
+    const id = req.params.productID;
+    var updateObject = req.body;
+    Product.updateOne({ _id: id }, { $set: updateObject })
+        .exec()
+        .then(data => {
+            if (data.n==0) {
+                return apiResponse.notFoundResponse404(res,`Product not found with id ${id}`);
+            }
+            return apiResponse.createdResponse201(res,'Successfully modified',data)
+        })
+        .catch(err => apiResponse.ErrorResponse500(res, err));
+};
 
-// Delete the information of a product with the specified productId in the request
+
+// Delete the information of a product with the specified productID in the request

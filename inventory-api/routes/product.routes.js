@@ -48,22 +48,22 @@ router.get('/', ProductController.findAll);
  *          schema:
  *              type: object
  *              properties:
-*                  product_code:
-*                      type: string
-*                  name:
-*                      type: string
-*                  category:
-*                      type: string
-*                  description:
-*                      type: string
-*                  supplier:
-*                      type: string
-*                  u_sell:
-*                      type: number
-*                  u_buy:
-*                      type: number
-*                  u_measure:
-*                      type: string
+ *                  product_code:
+ *                      type: string
+ *                  name:
+ *                      type: string
+ *                  category:
+ *                      type: string
+ *                  description:
+ *                      type: string
+ *                  supplier:
+ *                      type: string
+ *                  u_sell:
+ *                      type: number
+ *                  u_buy:
+ *                      type: number
+ *                  u_measure:
+ *                      type: string
  *              required:
  *                - content
  *      responses:
@@ -79,22 +79,65 @@ router.post('/', ProductController.create);
 
 /**
  * @swagger
- * /products/{productId}:
+ * /products/{productID}:
  *  get:
- *      summary: Retrieve a single product with productId
+ *      summary: Retrieve a single product with productID
  *      parameters:
- *        - name: productId
+ *        - name: productID
  *          in: path
  *          required: true
- *          description: Enter the productId
+ *          description: Enter the productID
  *      responses:
  *          '200':
  *              description: A successful response
  *          '404':
  *              description: Product is not found with specified productID
  *          '500':
- *              description: The specified productId is invalid or Internal server error
+ *              description: The specified productID is invalid or Internal server error
  */
-router.get('/:productId', ProductController.findOne);
+router.get('/:productID', ProductController.findOne);
+
+
+/**
+ * @swagger
+ * /products/{productID}:
+ *  patch:
+ *      summary: Update a single product with productID
+ *      parameters:
+ *        - name: productID
+ *          in: path
+ *          required: true
+ *          description: Enter the productID
+ *        - name: productcontent
+ *          in: body
+ *          required: true
+ *          schema:
+ *              type: object
+ *              properties:
+ *                  product_code:
+ *                      type: string
+ *                  name:
+ *                      type: string
+ *                  category:
+ *                      type: string
+ *                  description:
+ *                      type: string
+ *                  supplier:
+ *                      type: string
+ *                  u_sell:
+ *                      type: number
+ *                  u_buy:
+ *                      type: number
+ *                  u_measure:
+ *                      type: string
+ *      responses:
+ *          '201':
+ *              description: Successfully updated
+ *          '404':
+ *              description: Product is not found with specified productID
+ *          '500':
+ *              description: The specified productID is invalid or Internal server error
+ */
+router.patch('/:productID', ProductController.updateInfo);
 
 module.exports = router
